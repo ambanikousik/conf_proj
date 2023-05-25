@@ -35,6 +35,7 @@ Pillow==9.4.0
 pipenv==2020.11.15
 pipreqs==0.4.11
 platformdirs==2.4.0
+psycopg2==2.8.6
 pycodestyle==2.8.0
 pycparser==2.20
 PyJWT==2.4.0
