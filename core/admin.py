@@ -1,6 +1,6 @@
 from django.contrib import admin
 
-from core.models import  User
+from core.models import  User,Task
 
 # Register your models here.
 
@@ -12,6 +12,7 @@ class UserAdmin(admin.ModelAdmin):
     
 
 admin.site.register(User, UserAdmin)
+admin.site.register(Task)
 
 admin.site.site_title = 'conf_proj'
 admin.site.site_header = 'conf_proj'

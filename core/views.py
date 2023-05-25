@@ -8,11 +8,13 @@ from rest_framework.exceptions import APIException
 from django.http import Http404
 from rest_framework.decorators import api_view
 from rest_framework.reverse import reverse
+from rest_framework import permissions
+from rest_framework.permissions import IsAuthenticated
 # models
-from core.models import User
+from core.models import User,Task
 
 # Serializers
-from core.serializers import UserSerializer
+from core.serializers import UserSerializer,TaskSerializer
 # Create your views here.
    
 #---------
@@ -20,8 +22,10 @@ from core.serializers import UserSerializer
 #---------
 
 class UserList(APIView):
+
     queryset = User.objects.all()
     serializer_class = UserSerializer
+    
     @action(detail=False, methods=['GET','POST'])
     def get(self,request):
         print(request)
@@ -38,6 +42,7 @@ class UserList(APIView):
 
 class UserDetails(APIView):
     serializerClass = UserSerializer
+    permission_classes = [permissions.IsAuthenticated]
     @action(detail=True, methods=['get','put','delete'])
     def get_object(self, pk):
         try:
@@ -64,48 +69,50 @@ class UserDetails(APIView):
 
   
 #---------
-# School |
+# Task |
 #---------
 
-# class SchoolList(APIView):
-#     queryset = School.objects.all()
-#     serializer_class = SchoolSerializer
-#     @action(detail=False, methods=['GET','POST'])
-#     def get(self,request):
-#         print(request)
-#         snippet = School.objects.all()
-#         serializer = self.serializer_class(snippet,many=True)
-#         return Response(serializer.data)
-#     def post(self,request):
-#         serializer= SchoolSerializer(data=request.data)
-#         if serializer.is_valid():
-#             serializer.save()
-#             return Response(serializer.data,status=status.HTTP_201_CREATED)
-#         else:
-#             return Response(status=status.HTTP_400_BAD_REQUEST)
+class TaskList(APIView):
+    permission_classes = [permissions.IsAuthenticated]
+    queryset = Task.objects.all()
+    serializer_class = TaskSerializer
+    @action(detail=False, methods=['GET','POST'])
+    def get(self,request):
+        print(request)
+        snippet = Task.objects.all()
+        serializer = self.serializer_class(snippet,many=True)
+        return Response(serializer.data)
+    def post(self,request):
+        serializer= TaskSerializer(data=request.data)
+        if serializer.is_valid():
+            serializer.save()
+            return Response(serializer.data,status=status.HTTP_201_CREATED)
+        else:
+            return Response(status=status.HTTP_400_BAD_REQUEST)
 
-# class SchoolDetails(APIView):
-#     serializerClass = SchoolSerializer
-#     @action(detail=True, methods=['get','put','delete'])
-#     def get_object(self, pk):
-#         try:
-#             return School.objects.get(pk=pk)
-#         except School.DoesNotExist:
-#             raise Http404
-#     def get(self, request,  format=None):
-#         snippet = self.get_object(request.query_params.get('id'))
-#         serializer = self.serializerClass(snippet)
-#         return Response(serializer.data)
+class TaskDetails(APIView):
+    serializerClass = TaskSerializer
+    permission_classes = [permissions.IsAuthenticated]
+    @action(detail=True, methods=['get','put','delete'])
+    def get_object(self, pk):
+        try:
+            return Task.objects.get(pk=pk)
+        except Task.DoesNotExist:
+            raise Http404
+    def get(self, request,  format=None):
+        snippet = self.get_object(request.query_params.get('id'))
+        serializer = self.serializerClass(snippet)
+        return Response(serializer.data)
 
-#     def put(self, request,  format=None):
-#         snippet = self.get_object(request.query_params.get('id'))
-#         serializer = self.serializerClass(snippet, data=request.data)
-#         if serializer.is_valid():
-#             serializer.save()
-#             return Response(serializer.data)
-#         return Response(serializer.errors, status=status.HTTP_400_BAD_REQUEST)
+    def put(self, request,  format=None):
+        snippet = self.get_object(request.query_params.get('id'))
+        serializer = self.serializerClass(snippet, data=request.data)
+        if serializer.is_valid():
+            serializer.save()
+            return Response(serializer.data)
+        return Response(serializer.errors, status=status.HTTP_400_BAD_REQUEST)
 
-#     def delete(self, request,  format=None):
-#         snippet = self.get_object(request.query_params.get('id'))
-#         snippet.delete()
-#         return Response(status=status.HTTP_204_NO_CONTENT)
+    def delete(self, request,  format=None):
+        snippet = self.get_object(request.query_params.get('id'))
+        snippet.delete()
+        return Response(status=status.HTTP_204_NO_CONTENT)

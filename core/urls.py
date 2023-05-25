@@ -9,8 +9,12 @@ urlpatterns =  format_suffix_patterns(  [
    # path('', api_root),
 
    # User
-    re_path(r'^v1/user-list/$', UserList.as_view(), name='user-list'),
-    re_path(r'^v1/user-details/$', UserDetails.as_view(), name='user-details'),
+    path('v1/user-list/', UserList.as_view(), name='user-list'),
+    path('v1/user-details/', UserDetails.as_view(), name='user-details'),
+
+     # Task
+    path('v1/task-list/', TaskList.as_view(), name='task-list'),
+    path('v1/task-details/', TaskDetails.as_view(), name='task-details'),
    
 
 

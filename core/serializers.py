@@ -1,5 +1,5 @@
 
-from core.models import User
+from core.models import User,Task
 from rest_framework import serializers
 from django.db import transaction
 from dj_rest_auth.registration.serializers import RegisterSerializer
@@ -41,3 +41,8 @@ class CustomUserDetailsSerializer(serializers.ModelSerializer):
         )
         read_only_fields = ('id', 'email',)
 
+class TaskSerializer(serializers.ModelSerializer):
+
+    class Meta:
+        model=Task 
+        fields='__all__'
